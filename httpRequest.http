@@ -1,0 +1,108 @@
+###
+POST http://localhost:8080/api/flights
+Content-Type: application/json
+
+{
+  "flightNumber": "TU123",
+  "airline": "Tunisair",
+  "scheduledArrival": "2025-06-28T18:00:00",
+  "actualArrival": "2025-06-28T18:10:00",
+  "passengerCount": 100,
+  "status": "LANDED",
+  "gate": "A1",
+  "isVip": false,
+  "totalBaggageCount": 180
+}
+###
+POST http://localhost:8080/api/flights
+Content-Type: application/json
+
+{
+  "flightNumber": "AF404",
+  "airline": "Air France",
+  "scheduledArrival": "2025-06-28T18:00:00",
+  "actualArrival": "2025-06-28T18:30:00",
+  "passengerCount": 140,
+  "status": "LANDED",
+  "gate": "B2",
+  "isVip": true,
+  "totalBaggageCount": 220
+}
+###
+POST http://localhost:8080/api/belts
+Content-Type: application/json
+
+{
+  "beltNumber": "B1",
+  "capacity": "MEDIUM",
+  "status": "AVAILABLE",
+  "location": "A1",
+  "maxBaggageCapacity": 200,
+  "distanceToGate": 1,
+  "expectedAvailableAt": "2025-06-28T19:00:00",
+  "lastMaintenanceAt": "2025-06-25T08:00:00"
+}
+###
+POST http://localhost:8080/api/belts
+Content-Type: application/json
+
+{
+  "beltNumber": "B2",
+  "capacity": "LARGE",
+  "status": "AVAILABLE",
+  "location": "B1",
+  "maxBaggageCapacity": 300,
+  "distanceToGate": 2,
+  "expectedAvailableAt": "2025-06-28T18:50:00",
+  "lastMaintenanceAt": "2025-06-26T10:00:00"
+}
+###
+POST http://localhost:8080/api/belts
+Content-Type: application/json
+
+{
+  "beltNumber": "B3",
+  "capacity": "SMALL",
+  "status": "AVAILABLE",
+  "location": "C3",
+  "maxBaggageCapacity": 80,
+  "distanceToGate": 3,
+  "expectedAvailableAt": "2025-06-28T20:00:00",
+  "lastMaintenanceAt": "2025-06-20T10:00:00"
+}
+###
+POST http://localhost:8080/api/belt-assignments/assign
+Content-Type: application/json
+
+{
+  "flightId": 1
+}
+###
+POST http://localhost:8080/api/belt-assignments/assign
+Content-Type: application/json
+
+{
+  "flightId": 2
+}
+###
+GET http://localhost:8080/api/belts/available
+###
+GET http://localhost:8080/api/belt-assignments/active
+###
+GET http://localhost:8080/api/flights/2/delayed
+###
+GET http://localhost:8080/api/belts/belt-number?flightNumber=TU123
+
+
+
+
+###
+POST http://localhost:8080/api/flight-events/2/arrival
+###
+POST http://localhost:8080/api/flight-events/4/delay
+
+###
+PUT http://localhost:8080/api/flights/7/status?status=DELAYED
+
+###
+PUT http://localhost:8080/api/belts/5/maintenance
