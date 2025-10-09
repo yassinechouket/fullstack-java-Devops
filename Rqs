@@ -1,0 +1,57 @@
+1) et User Details:
+   - User name: Give a descriptive name, for example, terraform-admin.
+   - Click Next.
+   Set Permissions:
+   - Choose Attach policies directly.
+   - From the list of permission policies, search for and check AdministratorAccess.
+   - Click Next.
+   Note: For this project, AdministratorAccess will make it easier
+    for us to access all AWS services. However, in a real work environment, you should apply
+     the Principle of Least Privilege (only grant the minimum permissions required for a given task).
+
+--------------------------------------------------------------------------------------------------------------------------------------
+
+🧠 1. Why We Use the Access Key & Secret Key
+
+👉 These keys are like “programmatic credentials” that allow tools (Terraform, AWS CLI, SDKs, etc.) to act on your AWS account without logging in through the web.
+
+Access Key ID → like a username
+
+Secret Access Key → like a password
+
+Terraform uses these keys to authenticate itself to AWS whenever it tries to:
+
+Create a VPC
+
+Launch EC2 instances
+
+Create RDS databases
+
+Manage IAM, S3, etc.
+
+🔐 Without these keys, Terraform has no way to “prove” to AWS who is making the request → AWS rejects the operation.
+
+⚡ Example
+
+If you run:
+
+terraform apply
+
+
+Terraform will do something like:
+
+“Hey AWS, please create a VPC in region eu-west-3.”
+
+AWS replies:
+
+“Who are you? Where are your credentials?”
+
+Terraform includes the Access Key ID & Secret Key in the API call headers.
+AWS checks the IAM user associated with the keys, verifies permissions, and if valid:
+
+“✅ Okay, VPC created.
+
+
+
+
+--------------------------------------------------------------------------------------------------------------------------------------
