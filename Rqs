@@ -55,3 +55,23 @@ AWS checks the IAM user associated with the keys, verifies permissions, and if v
 
 
 --------------------------------------------------------------------------------------------------------------------------------------
+
+
+single_nat_gateway = true
+
+By default, Terraform can create one NAT Gateway per availability zone for high availability.
+
+Setting single_nat_gateway = true tells Terraform to create only one NAT Gateway and share it across all private subnets.
+✅ Purpose:
+
+Save cost — only one NAT Gateway (billed hourly) instead of multiple.
+
+⚠️ Trade-off:
+If that one NAT Gateway fails or the AZ it’s in goes down, all private subnets lose internet access.
+
+💡 Use in learning/testing → ✅
+💡 Use in production → ❌ (better to have one NAT per AZ)
+
+
+
+--------------------------------------------------------------------------------------------------------------------------------------
