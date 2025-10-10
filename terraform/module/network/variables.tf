@@ -13,3 +13,11 @@ variable "name" {
   description = "Name of the network"
   type        = string
 }
+
+variable "availability_zones" {
+  description = "List of availability zones"
+  type        = list(string)
+}
+
+
+
