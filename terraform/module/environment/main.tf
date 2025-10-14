@@ -6,7 +6,10 @@ module "network" {
   cidr               = "10.0.0.0/16"
   name               = var.name
 }
-
+module "ecr" {
+  source = "../ECR"
+  name = var.name
+}
 
 
 

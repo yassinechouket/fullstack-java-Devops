@@ -1,0 +1,19 @@
+With Kubernetes ingress, you can easily expose your services to the internet while
+maintaining granular control over who has access to them.
+
+
+
+Kubernetes is a platform that helps you run your containerized applications on a massive scale.
+ A key aspect of this is ensuring that different parts of your apps can easily communicate.
+  Kubernetes does this by using Kubernetes Services.
+ These Services allow smooth communication between components within the cluster
+  and between the cluster and the outside world.
+
+
+
+
+ Think of it this way: if you need more replicas of your app because of an increase
+  in incoming traffic (more demand), Kubernetes will spin up some new Pods to handle it.
+   If a Pod fails for some reason, no worries - Kubernetes will quickly create a new one to replace it.
+    If you want to update your app, Kubernetes can destroy old Pods and create new ones with the updated code.
+ So, the set of Pods running at one moment could be totally different from the set running a moment later.
