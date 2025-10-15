@@ -75,3 +75,39 @@ If that one NAT Gateway fails or the AZ it’s in goes down, all private subnets
 
 
 --------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+vpc-cni (AWS VPC CNI Plugin)
+
+Kubernetes concept: Networking for Pods.
+
+Problem it solves: In Kubernetes, each Pod needs an IP address to communicate with other Pods or AWS resources.
+
+How it works:
+
+Allocates IP addresses from your VPC subnets directly to Pods.
+
+Ensures Pods can talk to each other and to services outside the cluster.
+
+Without it: Pods might not be reachable, and network traffic may fail.
+
+Analogy: Think of each Pod as a house. vpc-cni gives each house a proper street address (IP) so others can find it.
+
+
+
+coredns
+
+Kubernetes concept: Internal DNS server.
+
+Problem it solves: Pods often need to talk to services inside the cluster by name (like my-service.default.svc.cluster.local).
+
+How it works:
+
+Runs as a Deployment inside the cluster.
+
+Resolves service names to Pod IPs automatically.
+
+Without it: Services can’t discover each other; Pods would need hard-coded IPs.
+
+Analogy: CoreDNS is like a phone book for your cluster. Without it, Pods can’t “call” each other by name.
