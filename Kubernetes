@@ -20,3 +20,117 @@ Kubernetes is a platform that helps you run your containerized applications on a
    If a Pod fails for some reason, no worries - Kubernetes will quickly create a new one to replace it.
     If you want to update your app, Kubernetes can destroy old Pods and create new ones with the updated code.
  So, the set of Pods running at one moment could be totally different from the set running a moment later.
+
+
+
+
+
+-----------------------------------------------------------
+
+🧱 disk_size = 20
+
+➡️ This means each EC2 worker node (the machines in your EKS cluster) will have a 20 GB hard disk.
+
+Think of it like your computer’s hard drive —
+it stores:
+
+the operating system (Amazon Linux)
+
+Docker images
+
+logs
+
+temporary files for your containers
+
+🟢 Example:
+If you set disk_size = 50, every node will have 50 GB of space.
+
+💡 For learning or small apps → 20 GB is enough.
+
+🧱 ami_type = "AL2_x86_64"
+
+➡️ “AMI” means Amazon Machine Image → it’s like the OS image used for your EC2 instances.
+
+"AL2" = Amazon Linux 2 (the standard OS used in AWS)
+
+"x86_64" = for normal Intel/AMD CPUs
+
+🟢 So this line means:
+
+Use Amazon Linux 2 with Intel/AMD processors for my worker nodes.
+
+💡 If you use Graviton (ARM processors), you’d change it to:
+
+ami_type = "AL2_ARM_64"
+
+🧱 update_config = { max_unavailable = 1 }
+
+➡️ This tells AWS how to update your nodes safely when you make changes (like new version or scaling).
+
+max_unavailable = 1 means:
+During the update, only one node can be offline at a time.
+
+🟢 Example:
+If you have 3 nodes and you upgrade them:
+
+AWS updates 1 node first (the other 2 stay running)
+
+then moves to the next one
+✅ This avoids your cluster going completely down.
+
+💡 Good for high availability (your apps keep running during updates).
+
+🧱 iam_role_additional_policies = { ... }
+
+➡️ IAM policies = permissions for your worker nodes.
+They tell AWS what your nodes are allowed to do.
+
+Each key here attaches a specific AWS-managed policy to the node’s IAM role:
+
+| Policy                                 | What it does                                                                  |
+| -------------------------------------- | ----------------------------------------------------------------------------- |
+| **AmazonEKSWorkerNodePolicy**          | Allows node to connect and register itself with your EKS cluster              |
+| **AmazonEKS_CNI_Policy**               | Allows networking between pods and VPC (very important for pod communication) |
+| **AmazonEC2ContainerRegistryReadOnly** | Allows pulling container images from Amazon ECR (like Docker Hub but on AWS)  |
+
+
+
+---------------------------------------------------------------------------------------
+
+Tag 1: kubernetes.io/cluster/<cluster-name> = shared
+
+This tells EKS that this subnet is associated with your cluster.
+
+Without this tag, EKS won’t know where to deploy your pods, LoadBalancers, or worker nodes.
+
+"shared" means: this subnet can be used by multiple clusters, not just exclusively by one.
+
+If you want a subnet only for this cluster, you could use "owned" instead.
+
+🔹 Tag 2: kubernetes.io/role/elb = 1 (for public subnets)
+
+ELB = Elastic Load Balancer
+
+This tells Kubernetes:
+
+“This public subnet is allowed for Internet-facing LoadBalancers”
+
+So if you create a Kubernetes Service of type LoadBalancer, EKS will launch the ELB in these public subnets.
+
+🔹 Tag 3: kubernetes.io/role/internal-elb = 1 (for private subnets)
+
+This is similar but for internal LoadBalancers.
+
+Kubernetes will create internal ELBs (accessible only inside your VPC) in these private subnets.
+
+Useful for services that shouldn’t be exposed to the internet.
+
+⚙️ How Kubernetes uses these tags
+
+When you create a Service of type LoadBalancer, Kubernetes checks subnet tags to know where it can place the ELB.
+
+Public ELBs → kubernetes.io/role/elb = 1
+
+Internal ELBs → kubernetes.io/role/internal-elb = 1
+
+Cluster associates subnets with your EKS nodes automatically.
