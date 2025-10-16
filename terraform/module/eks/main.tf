@@ -1,21 +1,4 @@
 
-resource "aws_iam_role" "terraform_admin_role" {
-    name = "TerraformAdminRole"
-
-    assume_role_policy = jsonencode({
-        Version = "2012-10-17"
-        Statement = [
-            {
-                Effect = "Allow"
-                Principal = {
-                    AWS = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"
-                }
-                Action = "sts:AssumeRole"
-            }
-        ]
-    })
-}
-
 module "eks"{
     source  = "terraform-aws-modules/eks/aws"
     version = "~> 20.8"
@@ -27,7 +10,7 @@ module "eks"{
         vpc-cni = {}
         coredns = {}
         kube-proxy = {}
-        # aws-load-balancer-controller = {}
+        # aws-load-balancer-controller = {} 
     }
 
     cluster_endpoint_public_access = true
