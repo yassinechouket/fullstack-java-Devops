@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: baggage-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: baggage-backend
+  template:
+    metadata:
+      labels:
+        app: baggage-backend
+    spec:
+      containers:
+        - name: baggage-backend
+          image: your-backend-image:latest
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: baggage-backend-config
+            - secretRef:
+                name: baggage-secrets
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: baggage-backend-service
+spec:
+  selector:
+    app: baggage-backend
+  ports:
+    - port: 8080
+      targetPort: 8080
+  type: ClusterIP

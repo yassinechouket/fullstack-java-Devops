@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: baggage-backend-config
+data:
+
+  SPRING_APPLICATION_NAME: "smart-baggage-system"
+  SERVER_PORT: "8080"
+
+
+  SPRING_DATASOURCE_URL: "jdbc:postgresql://postgres:5432/baggage_db"
+  SPRING_DATASOURCE_USERNAME: "postgres"
+
+
+
+  SPRING_JPA_HIBERNATE_DDL_AUTO: "update"
+  SPRING_JPA_SHOW_SQL: "true"
+
+
+  SPRING_KAFKA_BOOTSTRAP_SERVERS: "kafka:9092"
+
+  SMART_BAGGAGE_RECLAIM_TOPIC: "smart-baggage-reclaim-events"
+  SMART_BAGGAGE_NOTIFICATION_TOPIC: "smart-baggage-notifications"
+  KAFKA_TOPIC_FLIGHT_UPDATES: "flight-updates"
+  KAFKA_TOPIC_BELT_MAINTENANCE: "belt-maintenance"
