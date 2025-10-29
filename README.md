@@ -129,3 +129,6 @@ This project demonstrates:
 - ✅ Kubernetes manifests (production deployment)
 - ✅ GitHub Actions CI/CD (automated pipeline)
 - ✅ Terraform IaC (AWS infrastructure)
+
+<img width="811" height="610" alt="image" src="https://github.com/user-attachments/assets/fd89907b-fab6-4955-969a-9f9e20454a44" />
+
