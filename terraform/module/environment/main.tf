@@ -57,40 +57,7 @@ module "eks"{
 
 
 
-/*
-depends_on = [
-  aws_iam_role_policy_attachment.terraform_admin_policy
-]
-```
 
-**Why do we need this?**
-
-Terraform creates resources in parallel (at the same time). Without `depends_on`:
-```
-Time 0: Start creating IAM role ━━━━━━━━━━━━━━━━━━━━━━→ Done at Time 5
-Time 0: Start creating Policy attachment ━━━━━━━━━━━→ Done at Time 3
-Time 0: Start creating EKS cluster ━━━━━━━━━━━━━━━━→ ERROR! Role not ready!
-```
-
-With `depends_on`:
-```
-Time 0: Start creating IAM role ━━━━━━━━━━━━━━━━━━━━━━→ Done at Time 5
-Time 5: Start creating Policy attachment ━━━━━━━━━━━→ Done at Time 8
-Time 8: Start creating EKS cluster ━━━━━━━━━━━━━━━━→ Success!
-```
-
-**In simple words:** "Hey Terraform, don't create the EKS cluster until the IAM role AND its permissions are fully ready!"
-
-
-1. Create IAM Role ✅
-2. Attach permissions to the role ✅
-3. Wait for steps 1 & 2 to finish
-4. Create EKS cluster with the role ARN ✅
-   ↓
-  SUCCESS! Everything works! 🎉
-
-
-*/
 
 
 
