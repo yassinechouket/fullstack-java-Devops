@@ -93,7 +93,7 @@ make down             # Stop and cleanup
 **Provisions:**
 - ECR repository for images
 - EKS for Deployment 
-- VPC with security groups
+- VPC for security 
 - IAM roles 
 
 **Usage:**
