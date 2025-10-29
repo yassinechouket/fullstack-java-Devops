@@ -12,16 +12,10 @@ docker compose up -d
 docker compose down -v
 ```
 
-**Services Available:**
+**Services :**
 - Application: `http://localhost:8080`
 - PostgreSQL: `localhost:5336`
 - Kafka: `localhost:9092`
-
-## 📋 Prerequisites
-
-- Docker & Docker Compose
-- AWS CLI (for ECR deployments)
-- Make (optional)
 
 ## 🏗️ Architecture
 
