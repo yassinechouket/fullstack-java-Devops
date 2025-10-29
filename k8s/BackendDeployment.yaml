@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: baggage-backend
-          image: your-backend-image:latest # !!!!!!!
+          image: 742460038063.dkr.ecr.eu-west-3.amazonaws.com/staging:${IMAGE_TAG}
           ports:
             - containerPort: 8080
           envFrom:

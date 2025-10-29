@@ -7,6 +7,7 @@ module "network" {
   name               = var.name
   eks_cluster_name = var.name
 }
+
 module "ecr" {
   source = "../ECR"
   name = var.name
