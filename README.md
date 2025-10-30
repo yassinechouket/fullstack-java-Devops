@@ -1,4 +1,4 @@
-# Smart Baggage Reclaim Management System
+# Devops 
 
 A containerized Spring Boot application with Kafka messaging and PostgreSQL database, demonstrating modern DevOps practices.
 
