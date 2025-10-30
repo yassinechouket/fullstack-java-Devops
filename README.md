@@ -4,14 +4,6 @@ A containerized Spring Boot application with Kafka messaging and PostgreSQL data
 
 ## 🚀 Quick Start
 
-```bash
-# Start all services
-docker compose up -d
-
-# Stop services
-docker compose down -v
-```
-
 **Services :**
 - Application: `http://localhost:8080`
 - PostgreSQL: `localhost:5336`
