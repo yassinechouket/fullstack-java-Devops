@@ -13,7 +13,7 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: baggage-backend
+                name: baggage-backend-service
                 port:
                   number: 80
 
