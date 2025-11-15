@@ -10,6 +10,10 @@ BUILD_TAG := $(if $(BUILD_TAG),$(BUILD_TAG),latest)
 .DEFAULT_GOAL := build
 
 
+test:
+	mvn test
+
+
 
 build:
 	mvn clean package -DskipTests
