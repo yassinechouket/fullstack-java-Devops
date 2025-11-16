@@ -1,0 +1,206 @@
+pipeline {
+	agent {
+		docker {
+			image 'aquasec/trivy:latest'
+            args '-u root:root'    // allow file access inside container
+        }
+    }
+
+    environment {
+		AWS_ACCOUNT_ID      = "742460038063"
+        AWS_DEFAULT_REGION  = "eu-west-3"
+        AWS_ECR_DOMAIN      = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"
+        IMAGE_TAG           = sh(script: "git rev-parse HEAD", returnStdout: true).trim()
+    }
+
+    stages {
+
+		stage('Checkout Code') {
+			steps {
+				checkout scm
+            }
+        }
+
+        stage('Run Unit Tests') {
+			steps {
+				echo "Running unit tests..."
+                sh "make test"
+            }
+        }
+
+        stage('Build Java App') {
+			steps {
+				echo "Building Spring Boot application..."
+                sh "make build"
+            }
+        }
+
+        stage('Trivy Scan (Filesystem)') {
+			steps {
+				echo "Running Trivy filesystem scan..."
+                sh """
+                    trivy fs . \
+                        --severity HIGH,CRITICAL \
+                        --ignore-unfixed \
+                        --exit-code 1 \
+                        --output trivy-fs-report.txt
+                """
+            }
+            post {
+				always { archiveArtifacts artifacts: 'trivy-fs-report.txt' }
+            }
+        }
+
+        stage('Build Docker Image') {
+			steps {
+				echo "Building Docker image..."
+                sh "make build-image"
+            }
+        }
+
+        stage('Trivy Scan (Docker Image)') {
+			steps {
+				echo "Running Trivy image scan..."
+                sh """
+                    trivy image ${AWS_ECR_DOMAIN}/spring-kafka-service:${IMAGE_TAG} \
+                        --severity HIGH,CRITICAL \
+                        --ignore-unfixed \
+                        --exit-code 1 \
+                        --output trivy-image-report.txt
+                """
+            }
+            post {
+				always { archiveArtifacts artifacts: 'trivy-image-report.txt' }
+            }
+        }
+
+         stage('Login to AWS ECR') {
+			steps {
+				withAWS(credentials: 'aws-creds', region: "${AWS_DEFAULT_REGION}") {
+					sh "make build-image-login"
+                }
+            }
+        }
+
+        stage('Push Image to ECR') {
+			steps {
+				echo "Pushing Docker image to ECR..."
+                sh "make build-image-push"
+            }
+        }
+
+        stage('Deploy to Kubernetes') {
+			steps {
+				echo "Deploying to Kubernetes with IMAGE_TAG=${IMAGE_TAG}"
+
+                sh """
+                    sed -i 's|\\${IMAGE_TAG}|${IMAGE_TAG}|g' k8s/backend.yaml
+
+                    kubectl apply -f k8s/zookeeper.yaml
+                    kubectl apply -f k8s/kafka.yaml
+                    kubectl apply -f k8s/postgres.yaml
+                    kubectl apply -f k8s/backend.yaml
+                """
+            }
+        }
+    }
+}
+
+
+-----------------------------------------------------------
+
+
+
+and you need to run this cmd :
+✅ Your error is clear: Docker is NOT installed inside your Jenkins container
+
+From the console log:
+
+docker: not found
+exit code 127
+
+
+Your Jenkinsfile starts with:
+
+agent {
+    docker {
+        image 'aquasec/trivy:latest'
+    }
+}
+
+
+This means Jenkins must run Docker inside Jenkins.
+But your Jenkins container has no Docker installed, so every stage fails.
+
+✅ Why this happens
+
+You are running Jenkins in a Docker container:
+
+docker run -d --name jenkins ...
+
+
+Inside this container, Jenkins tries to run:
+
+docker pull
+docker run
+docker build
+
+
+But Docker CLI does not exist inside the Jenkins container → therefore:
+
+docker: not found
+
+✔️ Solution: Run Jenkins with access to the host Docker engine
+
+You must recreate Jenkins with Docker-in-Docker permissions.
+
+Run this command (copy/paste):
+
+docker run -d \
+  --name jenkins \
+  -p 8080:8080 \
+  -p 50000:50000 \
+  -v jenkins_home:/var/jenkins_home \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  jenkins/jenkins:lts
+
+🔥 The important part:
+-v /var/run/docker.sock:/var/run/docker.sock
+
+
+This gives Jenkins the ability to run Docker commands on your host.
+
+📌 Then install Docker CLI inside Jenkins
+
+Enter the container:
+
+docker exec -it jenkins bash
+
+
+Install Docker CLI:
+
+apt-get update
+apt-get install -y docker.io
+
+
+Test inside Jenkins:
+
+docker version
+docker ps
+
+
+If you see output → Docker is working.
+
+🎯 After that your pipeline will run successfully
+
+Because now:
+
+Jenkins will be able to run docker build
+
+Jenkins can run your Trivy scans
+
+Jenkins can push to ECR
+
+Jenkins can deploy with kubectl
+
+👉 Do you want me to give you a FULL Jenkins setup for your pipeline (Docker + AWS CLI + kubectl + credentials)?
