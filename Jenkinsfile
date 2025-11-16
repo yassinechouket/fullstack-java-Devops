@@ -6,6 +6,7 @@ pipeline {
         AWS_DEFAULT_REGION  = "eu-west-3"
         AWS_ECR_DOMAIN      = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"
         IMAGE_TAG           = sh(script: "git rev-parse HEAD", returnStdout: true).trim()
+        cluster-name 	    = "staging"
     }
 
     stages {
@@ -43,17 +44,24 @@ pipeline {
 
         stage('Deploy to Kubernetes') {
 			steps {
-				echo "Deploying to Kubernetes with IMAGE_TAG=${IMAGE_TAG}"
+				withAWS(credentials: 'aws-creds', region: "${AWS_DEFAULT_REGION}") {
+					echo "Deploying to Kubernetes with IMAGE_TAG=${IMAGE_TAG}"
 
-                sh """
-                    sed -i 's#\${IMAGE_TAG}#${IMAGE_TAG}#g' k8s/BackendDeployment.yaml
+					sh """
 
-                    kubectl apply -f k8s/ZookeeperDeployment.yaml
-                    kubectl apply -f k8s/KafkaDeployment.yaml
-                    kubectl apply -f k8s/postgresDeployment.yaml
-                    kubectl apply -f k8s/BackendDeployment.yaml
-                """
-            }
-        }
+						aws eks update-kubeconfig --name ${cluster-name}  --region ${AWS_DEFAULT_REGION}
+
+
+						sed -i 's#\${IMAGE_TAG}#${IMAGE_TAG}#g' k8s/BackendDeployment.yaml
+
+						# Apply Kubernetes manifests
+						kubectl apply -f k8s/ZookeeperDeployment.yaml
+						kubectl apply -f k8s/KafkaDeployment.yaml
+						kubectl apply -f k8s/PostgresDeployment.yaml
+						kubectl apply -f k8s/BackendDeployment.yaml
+					"""
+        		}
+    		}
+		}
     }
 }
