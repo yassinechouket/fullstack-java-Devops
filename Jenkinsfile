@@ -16,7 +16,7 @@ pipeline {
             }
         }
 
-       
+
 
         stage('Build Java App') {
 			steps {
@@ -42,10 +42,11 @@ pipeline {
 
         stage('Push Image to ECR') {
 			steps {
-				echo "Pushing Docker image to ECR..."
-                sh "make build-image-push"
-            }
-        }
+				withAWS(credentials: 'aws-creds', region: 'eu-west-3') {
+					sh 'make build-image-push'
+        		}
+    		}
+		}
 
         stage('Deploy to Kubernetes') {
 			steps {
