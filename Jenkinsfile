@@ -42,8 +42,9 @@ pipeline {
 
         stage('Push Image to ECR') {
 			steps {
-				withAWS(credentials: 'aws-creds', region: 'eu-west-3') {
-					sh 'make build-image-push'
+				withAWS(credentials: 'aws-creds', region: "${AWS_DEFAULT_REGION}") {
+					echo "Pushing Docker image to ECR..."
+            		sh "make build-image-push"
         		}
     		}
 		}
