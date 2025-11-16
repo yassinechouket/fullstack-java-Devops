@@ -2,7 +2,7 @@ AWS_ACCOUNT_ID := 742460038063
 AWS_DEFAULT_REGION := eu-west-3
 AWS_ECR_DOMAIN := $(AWS_ACCOUNT_ID).dkr.ecr.$(AWS_DEFAULT_REGION).amazonaws.com
 GIT_SHA := $(shell git rev-parse HEAD)
-BUILD_IMAGE := $(AWS_ECR_DOMAIN)/spring-kafka-service
+BUILD_IMAGE := $(AWS_ECR_DOMAIN)/staging
 BUILD_TAG := $(if $(BUILD_TAG),$(BUILD_TAG),latest)
 
 
