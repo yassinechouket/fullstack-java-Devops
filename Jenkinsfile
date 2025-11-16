@@ -48,7 +48,7 @@ pipeline {
                 sh """
                     sed -i 's#\${IMAGE_TAG}#${IMAGE_TAG}#g' k8s/BackendDeployment.yaml
 
-                    kubectl apply -f k8s/zookeeperDeployment.yaml
+                    kubectl apply -f k8s/ZookeeperDeployment.yaml
                     kubectl apply -f k8s/KafkaDeployment.yaml
                     kubectl apply -f k8s/postgresDeployment.yaml
                     kubectl apply -f k8s/BackendDeployment.yaml
