@@ -16,8 +16,6 @@ pipeline {
             }
         }
 
-
-
         stage('Build Java App') {
 			steps {
 				echo "Building Spring Boot application..."
@@ -32,22 +30,16 @@ pipeline {
             }
         }
 
-        stage('Login to AWS ECR') {
+        stage('Login to AWS ECR & Push Image') {
 			steps {
 				withAWS(credentials: 'aws-creds', region: "${AWS_DEFAULT_REGION}") {
-					sh "make build-image-login"
+					echo "Logging into ECR..."
+                    sh "make build-image-login"
+                    echo "Pushing Docker image to ECR..."
+                    sh "make build-image-push"
                 }
             }
         }
-
-        stage('Push Image to ECR') {
-			steps {
-				withAWS(credentials: 'aws-creds', region: "${AWS_DEFAULT_REGION}") {
-					echo "Pushing Docker image to ECR..."
-            		sh "make build-image-push"
-        		}
-    		}
-		}
 
         stage('Deploy to Kubernetes') {
 			steps {
