@@ -46,7 +46,7 @@ pipeline {
 				echo "Deploying to Kubernetes with IMAGE_TAG=${IMAGE_TAG}"
 
                 sh """
-                    sed -i 's|\\${IMAGE_TAG}|${IMAGE_TAG}|g' k8s/BackendDeployment.yaml
+                    sed -i 's#\${IMAGE_TAG}#${IMAGE_TAG}#g' k8s/BackendDeployment.yaml
 
                     kubectl apply -f k8s/zookeeper.yaml
                     kubectl apply -f k8s/kafka.yaml
