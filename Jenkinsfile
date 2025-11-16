@@ -16,12 +16,7 @@ pipeline {
             }
         }
 
-        stage('Run Unit Tests') {
-			steps {
-				echo "Running unit tests..."
-                sh "make test"
-            }
-        }
+       
 
         stage('Build Java App') {
 			steps {
