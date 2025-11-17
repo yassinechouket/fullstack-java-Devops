@@ -59,5 +59,34 @@ module "eks"{
 
 
 
+/*
+Here’s the full flow:
+
+Terraform creates an IAM role (terraform_admin_role) with a trust policy.
+
+Terraform attaches AdministratorAccess policy to it → full AWS access.
+
+The role ARN is passed to the EKS module.
+
+Inside EKS module:
+
+The role is assigned cluster-level permissions via access_entries.
+
+Terraform ensures the role can act as EKS admin, with RBAC access mapped via AmazonEKSAdminPolicy.
+
+depends_on guarantees correct creation order:
+
+Role → policy attachment → EKS module uses it.
+
+  The result:
+
+The role can be assumed to manage AWS resources (AdministratorAccess).
+
+The same role can manage EKS cluster resources (AmazonEKSAdminPolicy)*/
+
+
+
+
+
 
 
