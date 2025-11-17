@@ -69,18 +69,6 @@ module "eks"{
             }
         }
 
-        jenkins_user = {
-            principal_arn = "arn:aws:iam::742460038063:user/AKIA2ZXQRDOX7YSRXBCP"
-
-            policy_associations = {
-                admin_access = {
-                    policy_arn = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSAdminPolicy"
-                    access_scope = {
-                        type = "cluster"
-                    }
-                }
-            }
-        }
     }
 }
 

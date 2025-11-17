@@ -57,7 +57,7 @@ pipeline {
 						# Apply Kubernetes manifests
 						kubectl apply -f k8s/ZookeeperDeployment.yaml
 						kubectl apply -f k8s/KafkaDeployment.yaml
-						kubectl apply -f k8s/PostgresDeployment.yaml
+						kubectl apply -f k8s/postgresDeployment.yaml
 						kubectl apply -f k8s/BackendDeployment.yaml
 					"""
         		}
